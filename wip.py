@@ -1,18 +1,30 @@
-from sqlalchemy import create_engine
+import sqlalchemy as sa
+from sqlalchemy import engine, insert,
 
-engine = create_engine(
+metadata = sa.MetaData()
 
-    # 'postgresql+psycopg://app_user:app_password@localhost:5432/app_db'
+engine = sa.create_engine('sqlite:///database.db')
 
-    'sqlite:///database.db', echo=True  # criando um bd em memória
+# t = sa.Table(
+#     'comments',
+#     metadata,
+#     sa.Column('id', sa.Integer(), nullable=False),
+#     sa.Column('name', sa.String(), nullable=False),
+#     sa.Column('comment', sa.String(), nullable=False),
+#     sa.Column('created_at', sa.DateTime(), nullable=False),
+#     sa.PrimaryKeyConstraint('id'),
+
+# )
+t = sa.Table('comments', metadata, autoload_with=engine)
+
+sql = insert(t).values(
+    name='regi',
+    comment='é isso aí',
+
 )
 
+print(sql)
 
-print(engine.pool)
-
-con = engine.connect()
-
-print(engine.pool.status())
-# print(con.connection.dbapi_connection)
-
-con.close()
+# with engine.connect() as con:
+#     result = con.execute(sql)
+#     print(result.fetchmany(10))  # Seleciona os 10 primeiros valores
